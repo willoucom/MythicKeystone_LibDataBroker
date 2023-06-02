@@ -11,44 +11,76 @@ Addon.AltKeys = {}
 f:SetScript("OnUpdate", function(self, elap)
     Addon.Mykey = lib.getMyKeystone()
     Addon.AltKeys = lib.getAltsKeystone()
+    Addon.GuildKeys = lib.getGuildKeystone()
     if Addon.Mykey["current_key"] > 0 then
         local keystoneMapName = Addon.Mykey["current_key"] and C_ChallengeMode.GetMapUIInfo(Addon.Mykey["current_key"]) or " "
         dataobj.text = Addon.Mykey["current_keylevel"] .. " ".. keystoneMapName
     else
-        dataobj.text = "..."
+        dataobj.text = ""
     end
 end)
+
+
+local function formatText(obj)
+    local name = obj["name"] or ""
+    name = string.sub(name, 1, 12) -- cut long name
+    local color = "|cFFFFFFF"
+    if obj["class"] ~= "" then
+        color = C_ClassColor.GetClassColor(obj["class"]):GenerateHexColorMarkup()
+        name = color..name.."|r"
+    end
+    
+    local keylevel = obj["current_keylevel"]
+
+    return string.format("%5s %s",keylevel, name)
+end
+
+local function tableGroupByKeyLevel(obj)
+    local keys = {}
+    for _, key in pairs(obj) do
+        keys[key["current_key"]] = keys[key["current_key"]] or {}
+        local tmp = {key["fullname"] , key["current_keylevel"]}
+        tinsert(keys[key["current_key"]], tmp)
+    end
+
+    for keyid in pairs(keys) do
+        local tmptable = keys[keyid]
+        table.sort(tmptable, function(a, b) return a[2] > b[2] end)
+    end
+    return keys
+end
+
 -- In the data source addon...
 function dataobj:OnTooltipShow()
-	self:AddLine("Alts")
+    self:AddLine("Mythic Keystones")
     if Addon.AltKeys then
-        for key in pairs(Addon.AltKeys) do
-            local text = ""
-            local name = Addon.AltKeys[key]["fullname"] or ""
-            if string.find(name, "-") then
-                name,_ = string.split("-", name)
+        self:AddLine(" ")
+        self:AddLine("Alts")
+        local keys = tableGroupByKeyLevel(Addon.AltKeys) or {}
+        for keyid in pairs(keys) do
+            local keystoneMapName = keyid and C_ChallengeMode.GetMapUIInfo(keyid) or " "
+            self:AddLine("  " .. keystoneMapName)
+            for char in pairs(keys[keyid]) do
+                char = keys[keyid][char][1]
+                self:AddLine("  ".. formatText(Addon.AltKeys[char]))
             end
-            name = string.sub(name, 1, 12) -- cut long name
-            local padding = 12 - string.len(name) 
-            local pad = string.rep(" ",padding)
-            local color = "|cFFFFFFF"
-            if Addon.AltKeys[key]["class"] then
-                color = C_ClassColor.GetClassColor(Addon.AltKeys[key]["class"]):GenerateHexColorMarkup()
-            end
-            
-            local keylevel = Addon.AltKeys[key]["current_keylevel"]
-            
-            local keystoneMapName = ""
-            if Addon.AltKeys[key]["current_key"] then
-                keystoneMapName = Addon.AltKeys[key]["current_key"] and C_ChallengeMode.GetMapUIInfo(Addon.AltKeys[key]["current_key"]) or " "
-            end
-            if string.len(keystoneMapName) > 25 then
-                keystoneMapName = string.sub(keystoneMapName or "", 1, 25) .. "..."
-            end
-    
-            text = string.format("%s %2s |r%s %s",color, name, keylevel, keystoneMapName)
-            self:AddLine(text)
         end
     end
 
+    if Addon.GuildKeys then
+        self:AddLine(" ")
+        self:AddLine("Guild")
+        local keys = tableGroupByKeyLevel(Addon.GuildKeys) or {}
+        for keyid in pairs(keys) do
+            local keystoneMapName = keyid and C_ChallengeMode.GetMapUIInfo(keyid) or " "
+            self:AddLine("  " .. keystoneMapName)
+            for char in pairs(keys[keyid]) do
+                char = keys[keyid][char][1]
+                self:AddLine("  ".. formatText(Addon.GuildKeys[char]))
+            end
+        end
+    end
+
+
 end
+
