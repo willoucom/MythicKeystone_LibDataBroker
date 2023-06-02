@@ -1,0 +1,14 @@
+## Interface: 100100
+## Title: MythicKeystone_LibDataBroker
+## Version: @project-version@
+## Notes: Expose Mythic Keystone in Titan/Fubar
+## OptionalDeps: Ace3
+## IconTexture: 525134
+## RequiredDeps: LibMythicKeystone
+## X-Curse-Project-ID: 869227
+
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+#@end-no-lib-strip@
+
+core.lua
