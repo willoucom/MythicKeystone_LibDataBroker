@@ -23,7 +23,7 @@ local dataobj = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject('LibMythic
 })
 
 AddonCompartmentFrame:RegisterAddon({
-    text = 'MythicKeystone_LDB',
+    text = 'MythicKeystone',
     icon = "Interface\\Icons\\Inv_relics_hourglass",
     registerForAnyClick = true,
     notCheckable = true,
@@ -45,8 +45,6 @@ AddonCompartmentFrame:RegisterAddon({
 
 f:SetScript("OnUpdate", function(self, elap)
     Addon.Mykey = lib.getMyKeystone()
-    Addon.AltKeys = lib.getAltsKeystone()
-    Addon.GuildKeys = lib.getGuildKeystone()
     if Addon.Mykey["current_key"] > 0 then
         local keystoneMapName = Addon.Mykey["current_key"] and C_ChallengeMode.GetMapUIInfo(Addon.Mykey["current_key"]) or
             " "
@@ -87,6 +85,8 @@ end
 
 -- In the data source addon...
 function dataobj:OnTooltipShow()
+    Addon.AltKeys = lib.getAltsKeystone()
+    Addon.GuildKeys = lib.getGuildKeystone()
     self:AddLine("Mythic Keystones")
     if Addon.AltKeys then
         self:AddLine(" ")
