@@ -56,7 +56,7 @@ end)
 
 local function formatText(obj)
     local name = obj["name"] or ""
-    name = string.sub(name, 1, 12) -- cut long name
+    name = string.sub(name, 1, 14) -- cut long name
     local color = "|cFFFFFFF"
     if obj["class"] ~= "" then
         color = C_ClassColor.GetClassColor(obj["class"]):GenerateHexColorMarkup()
