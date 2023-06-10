@@ -6,6 +6,7 @@
 ## IconTexture: 525134
 ## RequiredDeps: LibMythicKeystone
 ## X-Curse-Project-ID: 869227
+## X-Wago-ID: XKq9ADKy
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
