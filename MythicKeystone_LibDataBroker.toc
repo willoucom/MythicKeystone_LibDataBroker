@@ -12,4 +12,4 @@
 libs\LibStub\LibStub.lua
 #@end-no-lib-strip@
 
-core.lua
+MythicKeystone_LibDataBroker.lua
