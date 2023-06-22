@@ -10,6 +10,8 @@
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
+libs\LibDataBroker-1\LibDataBroker-1.1.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 #@end-no-lib-strip@
 
 MythicKeystone_LibDataBroker.lua
