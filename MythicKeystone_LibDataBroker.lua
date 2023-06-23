@@ -35,8 +35,7 @@ AddonCompartmentFrame:RegisterAddon({
         end
     end,
     funcOnEnter = function()
-        GameTooltip:SetOwner(AddonCompartmentFrame, "ANCHOR_TOPRIGHT")
-        GameTooltip:SetPoint("TOPLEFT", AddonCompartmentFrame, "BOTTOMLEFT")
+        GameTooltip:SetOwner(AddonCompartmentFrame, "ANCHOR_TOPRIGHT", -100 )
         GameTooltip:ClearLines()
         dataobj.OnTooltipShow(GameTooltip)
         GameTooltip:Show()
