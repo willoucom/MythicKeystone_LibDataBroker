@@ -4,7 +4,7 @@
 ## Notes: Expose Mythic Keystone in Titan/Fubar
 ## OptionalDeps: Ace3
 ## IconTexture: 525134
-## RequiredDeps: LibMythicKeystone
+## RequiredDeps: LibMythicKeystone, MythicKeystone
 ## X-Curse-Project-ID: 869227
 ## X-Wago-ID: XKq9ADKy
 
@@ -12,6 +12,10 @@
 libs\LibStub\LibStub.lua
 libs\LibDataBroker-1\LibDataBroker-1.1.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\AceLocale-3.0\AceLocale-3.0.lua
 #@end-no-lib-strip@
+
+Locales\enUS.lua
+Locales\frFR.lua
 
 MythicKeystone_LibDataBroker.lua

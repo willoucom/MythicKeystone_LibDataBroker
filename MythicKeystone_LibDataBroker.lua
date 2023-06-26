@@ -1,8 +1,9 @@
-local ADDON, Addon = ...
+local myname, Addon = ...
 
-local f = CreateFrame("frame")
 local lib = LibStub("LibMythicKeystone-1.0")
 if not lib then return end
+
+local L = LibStub("AceLocale-3.0"):GetLocale(myname)
 
 Addon.Mykey = {}
 Addon.AltKeys = {}
@@ -10,7 +11,7 @@ Addon.AltKeys = {}
 local dataobj = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject('LibMythicKeystone', {
     type = 'data source',
     label = 'MythicKeystone',
-    text = "MythicKeystone",
+    text = "",
     icon = "Interface\\Icons\\Inv_relics_hourglass",
     OnClick = function()
         if PVEFrame:IsShown() then
@@ -19,7 +20,7 @@ local dataobj = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject('LibMythic
             PVEFrame_ShowFrame()
         end
     end,
-
+    
 })
 
 AddonCompartmentFrame:RegisterAddon({
@@ -42,6 +43,7 @@ AddonCompartmentFrame:RegisterAddon({
     end,
 })
 
+local f = CreateFrame("frame")
 f:SetScript("OnUpdate", function(self, elap)
     Addon.Mykey = lib.getMyKeystone()
     if Addon.Mykey["current_key"] > 0 then
@@ -86,10 +88,10 @@ end
 function dataobj:OnTooltipShow()
     Addon.AltKeys = lib.getAltsKeystone()
     Addon.GuildKeys = lib.getGuildKeystone()
-    self:AddLine("Mythic Keystones")
+    self:AddLine(L["AddonName"])
     if Addon.AltKeys then
         self:AddLine(" ")
-        self:AddLine("Alts")
+        self:AddLine(L["Alts"])
         local keys = tableGroupByKeyLevel(Addon.AltKeys) or {}
         for keyid in pairs(keys) do
             local keystoneMapName = keyid and C_ChallengeMode.GetMapUIInfo(keyid) or " "
@@ -103,7 +105,7 @@ function dataobj:OnTooltipShow()
 
     if Addon.GuildKeys then
         self:AddLine(" ")
-        self:AddLine("Guild")
+        self:AddLine(L["Guild"])
         local keys = tableGroupByKeyLevel(Addon.GuildKeys) or {}
         for keyid in pairs(keys) do
             local keystoneMapName = keyid and C_ChallengeMode.GetMapUIInfo(keyid) or " "
