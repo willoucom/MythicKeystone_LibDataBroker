@@ -65,6 +65,11 @@ local function formatText(obj)
     end
 
     local keylevel = obj["current_keylevel"]
+    if keylevel < 10 then
+        keylevel = "     " .. keylevel
+    else
+        keylevel = "   " .. keylevel
+    end
 
     return string.format("%5s %s", keylevel, name)
 end
