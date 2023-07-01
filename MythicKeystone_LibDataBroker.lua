@@ -55,10 +55,22 @@ f:SetScript("OnUpdate", function(self, elap)
     end
 end)
 
-local function formatText(obj)
+local function formatText(obj, type)
     local name = obj["name"] or ""
     name = string.sub(name, 1, 14) -- cut long name
-    local color = "|cFFFFFFF"
+    local weeklybest = obj["weeklybest"] or ""
+    local weeklycount = obj["weeklycount"] or ""
+    if type == "alts" then
+        if weeklybest ~= "" and weeklybest > 0 then
+            weeklybest = "|cFFFFFFFFWeek: Runs("..weeklycount..") Best("..  weeklybest ..")|r"
+        else
+            weeklybest = "|cFFFF0000No Weekly Best|r"
+        end
+    else
+        weeklybest = ""
+    end
+
+    local color = "|cFFFFFFFF"
     if obj["class"] ~= "" then
         color = C_ClassColor.GetClassColor(obj["class"]):GenerateHexColorMarkup()
         name = color .. name .. "|r"
@@ -71,7 +83,7 @@ local function formatText(obj)
         keylevel = "   " .. keylevel
     end
 
-    return string.format("%5s %s", keylevel, name)
+    return string.format("%s %s", keylevel, name) , string.format("%s", weeklybest)
 end
 
 local function tableGroupByKeyLevel(obj)
@@ -103,7 +115,7 @@ function dataobj:OnTooltipShow()
             self:AddLine("  " .. keystoneMapName)
             for char in pairs(keys[keyid]) do
                 char = keys[keyid][char][1]
-                self:AddLine("  " .. formatText(Addon.AltKeys[char]))
+                self:AddDoubleLine(formatText(Addon.AltKeys[char], "alts"))
             end
         end
     end
@@ -117,7 +129,7 @@ function dataobj:OnTooltipShow()
             self:AddLine("  " .. keystoneMapName)
             for char in pairs(keys[keyid]) do
                 char = keys[keyid][char][1]
-                self:AddLine("  " .. formatText(Addon.GuildKeys[char]))
+                self:AddLine("  " .. formatText(Addon.GuildKeys[char], "guild"))
             end
         end
     end
