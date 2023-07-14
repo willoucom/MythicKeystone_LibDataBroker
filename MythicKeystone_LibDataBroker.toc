@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: MythicKeystone_LibDataBroker
 ## Version: @project-version@
 ## Notes: Expose Mythic Keystone in Titan/Fubar
