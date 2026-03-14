@@ -46,8 +46,7 @@ AddonCompartmentFrame:RegisterAddon({
     end,
 })
 
-local f = CreateFrame("frame")
-f:SetScript("OnUpdate", function(self, elap)
+C_Timer.NewTicker(1, function()
     Addon.Mykey = lib.getMyKeystone()
     if Addon.Mykey and Addon.Mykey["current_key"] and Addon.Mykey["current_key"] > 0 then
         local keystoneMapName = C_ChallengeMode.GetMapUIInfo(Addon.Mykey["current_key"]) or " "
