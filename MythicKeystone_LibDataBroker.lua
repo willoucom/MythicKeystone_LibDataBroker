@@ -7,12 +7,15 @@ local L = LibStub("AceLocale-3.0"):GetLocale(myname)
 
 Addon.Mykey = {}
 Addon.AltKeys = {}
+Addon.GuildKeys = {}
+
+local ICON = "Interface\\Icons\\Inv_relics_hourglass"
 
 local dataobj = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject('LibMythicKeystone', {
     type = 'data source',
     label = 'MythicKeystone',
     text = "",
-    icon = "Interface\\Icons\\Inv_relics_hourglass",
+    icon = ICON,
     OnClick = function()
         if PVEFrame:IsShown() then
             HideUIPanel(PVEFrame)
@@ -20,12 +23,12 @@ local dataobj = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject('LibMythic
             PVEFrame_ShowFrame()
         end
     end,
-    
+
 })
 
 AddonCompartmentFrame:RegisterAddon({
     text = 'MythicKeystone',
-    icon = "Interface\\Icons\\Inv_relics_hourglass",
+    icon = ICON,
     registerForAnyClick = true,
     notCheckable = true,
     func = function(btn)
@@ -46,23 +49,23 @@ AddonCompartmentFrame:RegisterAddon({
 local f = CreateFrame("frame")
 f:SetScript("OnUpdate", function(self, elap)
     Addon.Mykey = lib.getMyKeystone()
-    if Addon.Mykey["current_key"] > 0 then
-        local keystoneMapName = Addon.Mykey["current_key"] and C_ChallengeMode.GetMapUIInfo(Addon.Mykey["current_key"]) or
-            " "
-        dataobj.text = Addon.Mykey["current_keylevel"] .. " " .. keystoneMapName
+    if Addon.Mykey and Addon.Mykey["current_key"] and Addon.Mykey["current_key"] > 0 then
+        local keystoneMapName = C_ChallengeMode.GetMapUIInfo(Addon.Mykey["current_key"]) or " "
+        dataobj.text = (Addon.Mykey["current_keylevel"] or "") .. " " .. keystoneMapName
     else
         dataobj.text = ""
     end
 end)
 
 local function formatText(obj, type)
+    if not obj then return "", "" end
     local name = obj["name"] or ""
     name = string.sub(name, 1, 14) -- cut long name
     local weeklybest = obj["weeklybest"] or ""
     local weeklycount = obj["weeklycount"] or ""
     if type == "alts" then
         if weeklybest ~= "" and weeklybest > 0 then
-            weeklybest = "|cFFFFFFFFWeek: Runs("..weeklycount..") Best("..  weeklybest ..")|r"
+            weeklybest = "|cFFFFFFFFWeek: Runs(" .. weeklycount .. ") Best(" .. weeklybest .. ")|r"
         else
             weeklybest = "|cFFFF0000No Weekly Best|r"
         end
@@ -83,7 +86,7 @@ local function formatText(obj, type)
         keylevel = "   " .. keylevel
     end
 
-    return string.format("%s %s", keylevel, name) , string.format("%s", weeklybest)
+    return string.format("%s %s", keylevel, name), string.format("%s", weeklybest)
 end
 
 local function tableGroupByKeyLevel(obj)
@@ -113,9 +116,9 @@ function dataobj:OnTooltipShow()
         for keyid in pairs(keys) do
             local keystoneMapName = keyid and C_ChallengeMode.GetMapUIInfo(keyid) or " "
             self:AddLine("  " .. keystoneMapName)
-            for char in pairs(keys[keyid]) do
-                char = keys[keyid][char][1]
-                self:AddDoubleLine(formatText(Addon.AltKeys[char], "alts"))
+            for _, entry in ipairs(keys[keyid]) do
+                local charName = entry[1]
+                self:AddDoubleLine(formatText(Addon.AltKeys[charName], "alts"))
             end
         end
     end
@@ -127,9 +130,9 @@ function dataobj:OnTooltipShow()
         for keyid in pairs(keys) do
             local keystoneMapName = keyid and C_ChallengeMode.GetMapUIInfo(keyid) or " "
             self:AddLine("  " .. keystoneMapName)
-            for char in pairs(keys[keyid]) do
-                char = keys[keyid][char][1]
-                self:AddLine("  " .. formatText(Addon.GuildKeys[char], "guild"))
+            for _, entry in ipairs(keys[keyid]) do
+                local charName = entry[1]
+                self:AddLine("  " .. formatText(Addon.GuildKeys[charName], "guild"))
             end
         end
     end
